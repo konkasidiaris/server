@@ -1,6 +1,7 @@
 import fastify from 'fastify';
 import S from 'fluent-json-schema';
-const server = fastify();
+import { logger } from './logger.js';
+const server = fastify({ logger });
 server.route({
     method: 'GET',
     url: '/health',
@@ -10,19 +11,7 @@ server.route({
         .prop('params', undefined)
         .prop('querystring', undefined)
         .prop('response', undefined)
-        .valueOf()
-    // {
-    //   body: undefined,
-    //   headers: undefined,
-    //   params: undefined,
-    //   querystring: undefined,
-    //   response: {
-    //     200: {
-    //       type: 'string'
-    //     }
-    //   }
-    // }
-    ,
+        .valueOf(),
     handler: function (request, reply) {
         const temp = request.query;
         reply.send(temp.asdf);
@@ -33,5 +22,14 @@ server.listen({ port: 3000, host: "0.0.0.0" }, (err, address) => {
         console.error(err);
         process.exit(1);
     }
-    console.log(`Server listening at ${address}`);
+    logger.info(`Server listening at ${address}`);
 });
+['SIGTERM', 'SIGINT', 'SIGUSR2'].forEach(signal => {
+    process.once(signal, () => {
+        logger.info('Received %s - terminating process...', signal);
+        server.close().then(() => {
+            process.exit(0);
+        });
+    });
+});
+process.on('exit', () => logger.info('Process terminated'));

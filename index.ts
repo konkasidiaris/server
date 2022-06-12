@@ -1,7 +1,8 @@
 import fastify, {FastifyInstance} from 'fastify';
 import S from 'fluent-json-schema';
+import {logger} from './logger.js'
 
-const server: FastifyInstance = fastify();
+const server: FastifyInstance = fastify({logger});
 
 server.route({
   method: 'GET',
@@ -26,5 +27,16 @@ server.listen({ port: 3000, host:"0.0.0.0" }, (err, address) => {
     console.error(err);
     process.exit(1);
   }
-  console.log(`Server listening at ${address}`);
+  logger.info(`Server listening at ${address}`);
 });
+
+['SIGTERM', 'SIGINT', 'SIGUSR2'].forEach(signal => {
+  process.once(signal as NodeJS.Signals, () => {
+    logger.info('Received %s - terminating process...', signal);
+    server.close().then(() => {
+      process.exit(0);
+    });
+  });
+});
+
+process.on('exit', () => logger.info('Process terminated'));
