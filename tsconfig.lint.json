@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig",
+  "include": ["src", "scripts", "test", "alias.js", ".eslintrc", "jest-testcontainers-config.js"],
+  "exclude": []
+}

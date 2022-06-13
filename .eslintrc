@@ -1,0 +1,77 @@
+{
+    "env": {
+      "es2021": true,
+      "node": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "plugin:import/typescript",
+      "prettier"
+    ],
+    "globals": {
+      "fail": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": "tsconfig.lint.json"
+    },
+    "plugins": ["@typescript-eslint"],
+    "rules": {
+      "no-console": "error",
+      "quotes": ["error", "single", {"avoidEscape": true}],
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {"selector": "default", "format": ["strictCamelCase", "StrictPascalCase", "UPPER_CASE"]},
+        {"selector": "default", "modifiers": ["destructured"], "format": null},
+        {
+          "selector": "parameter",
+          "format": ["strictCamelCase", "StrictPascalCase"],
+          "leadingUnderscore": "allow"
+        },
+        {"selector": "variable", "format": ["strictCamelCase", "StrictPascalCase", "UPPER_CASE"]},
+        {
+          "selector": "objectLiteralProperty",
+          "format": ["strictCamelCase", "camelCase", "snake_case", "UPPER_CASE", "StrictPascalCase"],
+          "leadingUnderscore": "allow"
+        }
+      ],
+      "@typescript-eslint/explicit-function-return-type": [
+        "warn",
+        {
+          "allowExpressions": true,
+          "allowTypedFunctionExpressions": true,
+          "allowHigherOrderFunctions": true
+        }
+      ],
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-empty-function": "off",
+      "@typescript-eslint/no-underscore-dangle": "off",
+      "@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-use-before-define": ["error", {"functions": true, "classes": false}]
+    },
+    "overrides": [
+      {
+        "files": ["*.js"],
+        "rules": {
+          "@typescript-eslint/naming-convention": "off",
+          "@typescript-eslint/no-var-requires": "off",
+          "@typescript-eslint/explicit-function-return-type": "off",
+          "@typescript-eslint/explicit-module-boundary-types": "off"
+        }
+      }
+    ],
+    "settings": {
+      "import/resolver": {
+        "alias": {
+          "map": [
+            ["@logger", "./src/logger"],
+          ],
+          "extensions": [".js", ".ts"]
+        }
+      }
+    }
+  }
