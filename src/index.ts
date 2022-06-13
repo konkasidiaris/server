@@ -1,8 +1,11 @@
 import fastify, {FastifyInstance} from 'fastify';
+import helmet from '@fastify/helmet';
 import S from 'fluent-json-schema';
 import {logger} from '@logger';
 
 const server: FastifyInstance = fastify({logger});
+
+server.register(helmet);
 
 server.route({
   method: 'GET',
